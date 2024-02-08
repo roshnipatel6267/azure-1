@@ -108,3 +108,11 @@ variable "location" {
   type        = string
   description = "Location of the Blob Storage"
 }
+
+
+variable "location_name" {
+  type        = string
+  description = "Location for resources in the root module"
+}
+
+
