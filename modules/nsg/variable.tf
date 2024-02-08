@@ -1,15 +1,16 @@
 variable "nsg_name" {
   type        = string
-  default = "the name of the network security group"
+  description = "Name of the Network Security Group"
 }
 
 variable "nsg_location" {
   type        = string
-  default = "southeast Asia"
+  description = "Location of the Network Security Group"
 }
+
 variable "nsg_resource_group_name" {
   type        = string
-  default = "sa1_test_eic_TejalDave"
+  description = "Name of the Resource Group for NSG"
 }
 
 variable "nsg_rules" {
@@ -23,6 +24,5 @@ variable "nsg_rules" {
     source_address_prefix      = string
     destination_address_prefix = string
   }))
-  description = "the list of rules for the network security group"
-
+  description = "List of rules for the Network Security Group"
 }

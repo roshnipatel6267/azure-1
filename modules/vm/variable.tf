@@ -1,36 +1,40 @@
-variable "vm_name" {
-  type        = string
-  description = "the name of virtual network"
-}
 
 variable "location_name" {
-  type    = string
-  default = "southeast Asia"
+  type        = string
+  description = "Location of the Virtual Machine"
+}
+
+variable "vm_name" {
+  type        = string
+  description = "Name of the Virtual Machine"
+}
+
+variable "vm_location" {
+  type        = string
+  description = "Location of the Virtual Machine"
 }
 
 variable "vm_resource_group_name" {
-  type    = string
-  default = "sa1_test_eic_TejalDave"
+  type        = string
+  description = "Name of the Resource Group for VM"
 }
 
 variable "vm_size" {
-    type = string
-    default = "Standard_B1s "
+  type        = string
+  description = "Size of the Virtual Machine"
 }
 
 variable "vm_username" {
-    type = string 
-      default = "ekansh-ubuntu"
-
-} 
-
-variable "vm_password" {
-    type = string
-    default = "Complex@password"
+  type        = string
+  description = "Username for the Virtual Machine"
 }
 
+variable "vm_password" {
+  type        = string
+  description = "Password for the Virtual Machine"
+}
 
 variable "subnet_id" {
-  description = "The ID of the subnet to associate with the VM"
   type        = string
+  description = "ID of the subnet to attach the VM to"
 }
