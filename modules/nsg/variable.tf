@@ -3,12 +3,12 @@ variable "nsg_name" {
   description = "Name of the Network Security Group"
 }
 
-variable "nsg_location" {
+variable "location" {
   type        = string
   description = "Location of the Network Security Group"
 }
 
-variable "nsg_resource_group_name" {
+variable "resource_group_name" {
   type        = string
   description = "Name of the Resource Group for NSG"
 }

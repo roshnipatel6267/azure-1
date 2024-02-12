@@ -5,12 +5,12 @@ variable "nsg_name" {
   description = "Name of the Network Security Group"
 }
 
-variable "nsg_location" {
+variable "location" {
   type        = string
   description = "Location of the Network Security Group"
 }
 
-variable "nsg_resource_group_name" {
+variable "resource_group_name" {
   type        = string
   description = "Name of the Resource Group for NSG"
 }
@@ -33,17 +33,6 @@ variable "vnet_name" {
   type        = string
   description = "Name of the Virtual Network"
 }
-
-variable "vnet_location" {
-  type        = string
-  description = "Location of the Virtual Network"
-}
-
-variable "vnet_resource_group_name" {
-  type        = string
-  description = "Name of the Resource Group for VNET"
-}
-
 variable "vnet_address_space" {
   type        = list(string)
   description = "Address space for the Virtual Network"
@@ -63,17 +52,6 @@ variable "vm_name" {
   type        = string
   description = "Name of the Virtual Machine"
 }
-
-variable "vm_location" {
-  type        = string
-  description = "Location of the Virtual Machine"
-}
-
-variable "vm_resource_group_name" {
-  type        = string
-  description = "Name of the Resource Group for VM"
-}
-
 variable "vm_size" {
   type        = string
   description = "Size of the Virtual Machine"
@@ -98,17 +76,6 @@ variable "container_name" {
   type        = string
   description = "Name of the Blob Container"
 }
-
-variable "resource_group_name" {
-  type        = string
-  description = "Name of the Resource Group for Blob Storage"
-}
-
-variable "location" {
-  type        = string
-  description = "Location of the Blob Storage"
-}
-
 
 variable "location_name" {
   type        = string

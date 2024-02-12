@@ -2,7 +2,7 @@
 resource "azurerm_network_interface" "nic" {
   name                = "${var.vm_name}-nic"
   location            = var.location_name
-  resource_group_name = var.vm_resource_group_name
+  resource_group_name = var.resource_group_name
 
   ip_configuration {
     name                          = "ipconfig"
@@ -16,7 +16,7 @@ resource "azurerm_network_interface" "nic" {
 resource "azurerm_public_ip" "public_ip" {
   name                = "${var.vm_name}-ip"
   location            = var.location_name
-  resource_group_name = var.vm_resource_group_name
+  resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
 }
 
@@ -24,7 +24,7 @@ resource "azurerm_public_ip" "public_ip" {
 resource "azurerm_linux_virtual_machine" "vm" {
   name                            = var.vm_name
   location                        = var.location_name
-  resource_group_name             = var.vm_resource_group_name
+  resource_group_name             = var.resource_group_name
   size                            = var.vm_size
   admin_username                  = var.vm_username
   admin_password                  = var.vm_password

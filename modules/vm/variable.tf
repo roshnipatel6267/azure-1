@@ -9,12 +9,12 @@ variable "vm_name" {
   description = "Name of the Virtual Machine"
 }
 
-variable "vm_location" {
+variable "location" {
   type        = string
   description = "Location of the Virtual Machine"
 }
 
-variable "vm_resource_group_name" {
+variable "resource_group_name" {
   type        = string
   description = "Name of the Resource Group for VM"
 }
@@ -52,10 +52,5 @@ variable "container_name" {
 
 variable "sas_token_expiry" {
   description = "Expiry date for the SAS token"
-  type        = string
-}
-
-variable "resource_group_name" {
-  description = "The name of the resource group where the virtual machine and other resources are created."
   type        = string
 }
