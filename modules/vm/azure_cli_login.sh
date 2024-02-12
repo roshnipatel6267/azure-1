@@ -9,7 +9,7 @@ sudo apt-get update
 sudo apt-get install -y azure-cli
 
 # Log in to Azure (you might need to follow the interactive prompt)
-az login
+
 az storage blob upload \
     --account-name <storage-account> \
     --container-name <container> \
