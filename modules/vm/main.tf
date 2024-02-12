@@ -47,37 +47,17 @@ resource "azurerm_linux_virtual_machine" "vm" {
   tags = {
     name  = "resource-owner"
     owner = "roshni-einfochips.com"
-  }
-#custom_data = filebase64("${path.module}/modules/vm/azure_cli_login.sh")
-  
-custom_data = filebase64("${path.module}/azure_cli_login.sh")
-/*
+  }  
+#custom_data = filebase64("${path.module}/azure_cli_login.sh")
+
  provisioner "local-exec" {
   command = <<-EOT
-    az storage blob upload --account-name roshnitest11 \
-                            --container-name roshni-container \
+    az storage blob upload --account-name ${var.storage_account_name} \
+                            --container-name ${var.container_name}  \
                             --name file1.txt \
                             --type block \
                             --content-type "text/plain" \
-                            --account-key R0Mfp6Ulb/XMN2+/85yNA3jbivZiTzCARc7vklihm6BESWz1JcqbDWpCo3xbCKfDI05CivFA0Wfl+AStqoxQiw== \
-                            --content-encoding "gzip" \
                             --file ./file1.txt
   EOT
-}*/
-/*
- provisioner "local-exec" {
-    command = <<-EOT
-      storage_access_key=$(terraform output storage_access_key)
-      ssh ${azurerm_linux_virtual_machine.vm.admin_username}@${azurerm_public_ip.public_ip.ip_address} \
-        az storage blob upload \
-          --account-name ${var.storage_account_name} \
-          --container-name ${var.container_name} \
-          --name file1.txt \
-          --type block \
-          --account-key $storage_access_key \
-          --content-type "text/plain" \
-          --content-encoding "gzip" \
-          --file ./file1.txt
-    EOT
-  }*/
+}
 }
