@@ -5,3 +5,9 @@ output "storage_account_name" {
 output "container_name" {
   value = azurerm_storage_container.blob_container.name
 }
+output "blob_container_name" {
+  value = azurerm_storage_container.blob_container.name
+}
+
+
+

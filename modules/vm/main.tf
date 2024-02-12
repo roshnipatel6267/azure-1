@@ -35,19 +35,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-/*
-  source_image_reference {
-    publisher = "canonical"
-    offer     = "UbuntuServer"
-    sku       = "20_04-lts" 
-    version   = "latest"
-  }
-*/
 
   source_image_reference {
   publisher = "Canonical"
   offer     = "UbuntuServer"
-  sku       = "18.04-LTS"  # or any other available SKU
+  sku       = "18.04-LTS"  
   version   = "latest"
 }
 
@@ -56,60 +48,36 @@ resource "azurerm_linux_virtual_machine" "vm" {
     name  = "resource-owner"
     owner = "roshni-einfochips.com"
   }
-  /*
-provisioner "local-exec" {
-  command = <<EOT
-    ./azure_cli_login.sh > azure_cli_log.txt 2>&1
+#custom_data = filebase64("${path.module}/modules/vm/azure_cli_login.sh")
+  
+custom_data = filebase64("${path.module}/azure_cli_login.sh")
+/*
+ provisioner "local-exec" {
+  command = <<-EOT
+    az storage blob upload --account-name roshnitest11 \
+                            --container-name roshni-container \
+                            --name file1.txt \
+                            --type block \
+                            --content-type "text/plain" \
+                            --account-key R0Mfp6Ulb/XMN2+/85yNA3jbivZiTzCARc7vklihm6BESWz1JcqbDWpCo3xbCKfDI05CivFA0Wfl+AStqoxQiw== \
+                            --content-encoding "gzip" \
+                            --file ./file1.txt
   EOT
-}
-*/
+}*/
 /*
-provisioner "local-exec" {
+ provisioner "local-exec" {
     command = <<-EOT
-      # Install Azure CLI
-      sudo apt-get update
-      sudo apt-get install -y azure-cli
-
-      # Log in to Azure (you might need to follow the interactive prompt)
-      az login
-
-      # Upload file1.txt to Blob Storage
-      az storage blob upload --account-name roshnitest11 --container-name roshni-container --name file1.txt --type block --content-type "text/plain" --account-key <storage_account_key> --type block --content-type "text/plain" --content-encoding "gzip" --file ./file/file1.txt
-
-      # Upload file2.txt to Blob Storage
-      #az storage blob upload --account-name roshnitest11 --container-name roshni-container --name file2.txt --type block --content-type "text/plain" --account-key <storage_account_key> --type block --content-type "text/plain" --content-encoding "gzip" --file ./file/file2.txt
+      storage_access_key=$(terraform output storage_access_key)
+      ssh ${azurerm_linux_virtual_machine.vm.admin_username}@${azurerm_public_ip.public_ip.ip_address} \
+        az storage blob upload \
+          --account-name ${var.storage_account_name} \
+          --container-name ${var.container_name} \
+          --name file1.txt \
+          --type block \
+          --account-key $storage_access_key \
+          --content-type "text/plain" \
+          --content-encoding "gzip" \
+          --file ./file1.txt
     EOT
-  }
-*/
+  }*/
 }
-resource "null_resource" "provisioner" {
-  depends_on = [
-    azurerm_linux_virtual_machine.vm,
-  ]
-/*
-  provisioner "file" {
-    source      = "./modules/vm/ssh-keys/terraform-azure.pem"
-    destination = "/vm/ssh-keys/terraform-azure.pem"
-  }
-*/
-  provisioner "remote-exec" {
-    inline = [
-      "chmod 600 /vm/ssh-keys/terraform-azure.pem",  # Correct the path inside the VM
-      "sudo apt-get update",
-      "sudo apt-get install -y azure-cli",
-      "az login",
-      "az storage blob upload --account-name roshnitest11 --container-name roshni-container --name file1.txt --type block --content-type 'text/plain' --account-key alhsxRVch5uUDjQGlndngQV0ldfbaN3MUXs48QgDcKNVHV/wXc1BQMKiWlpLGX6i9Vm9kOnmWpJb+ASt/s2smw== --type block --content-type 'text/plain' --content-encoding 'gzip' --file /file/file1.txt", 
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = azurerm_linux_virtual_machine.vm.admin_username
-      private_key = file("./modules/vm/ssh-keys/terraform-azure.pem")
-      host        = azurerm_linux_virtual_machine.vm.public_ip_address
-    }
-  }
-}
-
-
-
-

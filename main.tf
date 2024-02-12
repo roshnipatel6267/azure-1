@@ -32,7 +32,12 @@ module "vm" {
   vm_username             = var.vm_username
   vm_password             = var.vm_password
   subnet_id               = module.vnet.subnet_id
-  location_name           = var.location # Make sure this line is present
+  location_name           = var.location 
+
+  resource_group_name     = var.resource_group_name  
+  storage_account_name    = module.blob.storage_account_name
+  container_name          = module.blob.container_name
+  sas_token_expiry        = "2030-01-01T00:00:00Z"
 }
 module "blob" {
   source                   = "./modules/blob"
@@ -40,5 +45,5 @@ module "blob" {
   container_name           = var.container_name
   resource_group_name      = var.resource_group_name
   location                 = var.location
+  
 }
-

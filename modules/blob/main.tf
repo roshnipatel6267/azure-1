@@ -19,3 +19,4 @@ resource "azurerm_storage_blob" "roshni-blob" {
   type                   = "Block"
   source                 = "./file2.txt"
 }
+
