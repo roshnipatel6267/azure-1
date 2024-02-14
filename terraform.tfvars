@@ -1,5 +1,4 @@
 # terraform.tfvars
-
 # Network Security Group (NSG) variables
 nsg_name                    = "nsg"
 location                = "southeast Asia"
