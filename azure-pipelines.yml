@@ -1,3 +1,5 @@
+https://github.com/roshnipatel6267/azure-1.git
+
 trigger:
 - dev
 
@@ -53,7 +55,7 @@ jobs:
           Write-Output "Pipeline execution canceled."
           exit 1
       }
-  displayName: 'Prompt for Approval'
+    displayName: 'Prompt for Approval'
 
   - script: |
       cd azure-1
