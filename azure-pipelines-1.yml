@@ -35,13 +35,12 @@ jobs:
       terraform plan -out=tfplan
     displayName: 'Terraform Plan'
 
-  - powershell: |
-      $result = Read-Host "Do you want to apply the Terraform changes? Type 'Approve' to apply, or 'Reject' to cancel."
-
-      if ($result -ne "Approve") {
-          Write-Output "Pipeline execution canceled."
+  - script: |
+      read -p "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel: " result
+      if [ "$result" != "y" ]; then
+          echo "Pipeline execution canceled."
           exit 1
-      }
+      fi
     displayName: 'Prompt for Approval'
 
   - script: |
