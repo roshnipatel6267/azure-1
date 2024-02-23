@@ -35,12 +35,20 @@ jobs:
       terraform plan -out=tfplan
     displayName: 'Terraform Plan'
 
-  - task: ManualValidation@2
+  - job: ManualApproval
     displayName: 'Manual Approval'
-    inputs:
-      instructions: 'Review the Terraform changes and approve or reject.'
-      onTimeout: 'reject'
-      timeoutInMinutes: 1440 # 24 hours
+    dependsOn: TerraformDeployment
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AgentlessJob@1
+      inputs:
+        jobDisplayName: 'Manual Approval'
+        timeoutInMinutes: 1440 # 24 hours
+        cancelTimeoutInMinutes: 1440 # 24 hours
+        cancelTimeoutJobId: $(TerraformDeployment.JobId)
+        waitForCompletion: true
+      displayName: 'Manual Approval'
 
   - powershell: |
       param (
@@ -59,3 +67,4 @@ jobs:
       cd azure-1
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
+
