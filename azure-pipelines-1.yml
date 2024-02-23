@@ -22,17 +22,21 @@ jobs:
 
   - script: |
       ls -la   # List files in the current directory for debugging
+      pwd      # Print the current working directory for debugging
       cd $(Build.SourcesDirectory)/azure-1
+      pwd      # Print the current working directory again for debugging
       terraform init
     displayName: 'Terraform Init'
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
+      ls -la   # List files in the current directory for debugging
       terraform validate
     displayName: 'Terraform Validate'
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
+      ls -la   # List files in the current directory for debugging
       terraform plan -out=tfplan
     displayName: 'Terraform Plan'
 
@@ -49,3 +53,4 @@ jobs:
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
     condition: succeededOrFailed()  # Continue regardless of manual approval result
+
