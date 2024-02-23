@@ -35,7 +35,6 @@ module "vm" {
   location_name           = var.location   
   storage_account_name    = module.blob.storage_account_name
   container_name          = module.blob.container_name
-  sas_token_expiry        = "2030-01-01T00:00:00Z"
 }
 module "blob" {
   source                   = "./modules/blob"

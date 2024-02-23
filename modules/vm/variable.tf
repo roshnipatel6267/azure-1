@@ -49,8 +49,8 @@ variable "container_name" {
   description = "Name of the storage container"
   type        = string
 }
-
+/*
 variable "sas_token_expiry" {
   description = "Expiry date for the SAS token"
   type        = string
-}
+}*/
