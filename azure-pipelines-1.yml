@@ -35,26 +35,7 @@ jobs:
       terraform plan -out=tfplan
     displayName: 'Terraform Plan'
 
-  - job: ManualApproval
-    displayName: 'Manual Approval'
-    dependsOn: TerraformDeployment
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: AgentlessJob@1
-      inputs:
-        jobDisplayName: 'Manual Approval'
-        timeoutInMinutes: 1440 # 24 hours
-        cancelTimeoutInMinutes: 1440 # 24 hours
-        cancelTimeoutJobId: $(TerraformDeployment.JobId)
-        waitForCompletion: true
-      displayName: 'Manual Approval'
-
   - powershell: |
-      param (
-        [string]$result = "Reject"
-      )
-
       $result = Read-Host "Do you want to apply the Terraform changes? Type 'Approve' to apply, or 'Reject' to cancel."
 
       if ($result -ne "Approve") {
@@ -67,4 +48,4 @@ jobs:
       cd azure-1
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
-
+    condition: succeededOrFailed()  # Continue regardless of manual approval result
