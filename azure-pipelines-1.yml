@@ -42,7 +42,7 @@ jobs:
       terraform plan -out=tfplan -input=false
     displayName: 'Terraform Plan'
 
-  - task: ManualIntervention@8
+  - task: ManualIntervention@2
     inputs:
       instructions: 'approve for yes or no'
       emailRecipients: 'rosy69092@gmail.com'
