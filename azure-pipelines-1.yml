@@ -1,3 +1,4 @@
+
 trigger:
 - dev
 
@@ -8,10 +9,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 jobs:
-- job: terraform_approval
-  displayName: "Terraform Approval"
-  steps:
-    - script: echo "Terraform Approval Job"
 
 - job: manual_approval
   displayName: "Manual Approval"
@@ -19,10 +16,16 @@ jobs:
   pool:
     vmImage: server
   steps:
-    - task:  ManualValidation
+    - task:  ManualValidation@0
       timeoutInMinutes: 5
       inputs:
         instructions: "Hi, please validate"
+    
+    - script: |
+        cd $(Build.SourcesDirectory)/azure-1
+        ls -la
+        terraform init
+      displayName: 'Terraform init'
 
     - script: |
         cd $(Build.SourcesDirectory)/azure-1
