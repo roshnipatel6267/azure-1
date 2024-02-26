@@ -45,7 +45,7 @@ jobs:
       fi
     displayName: 'Check for Approval'
 
-  - task: ManualValidation@0
+  - task: ManualValidation@2
     displayName: 'Manual Approval'
     inputs:
       instructions: 'Review the Terraform changes and approve or reject.'
