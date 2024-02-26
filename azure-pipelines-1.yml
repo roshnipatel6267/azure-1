@@ -21,16 +21,13 @@ jobs:
       performMultiLevelLookup: true
 
   - script: |
-      ls -la   # List files in the current directory for debugging
-      pwd      # Print the current working directory for debugging
+      ls -la
       cd $(Build.SourcesDirectory)/azure-1
-      pwd      # Print the current working directory again for debugging
       terraform init
     displayName: 'Terraform Init'
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
-      ls -la   # List files in the current directory for debugging
       terraform validate
     displayName: 'Terraform Validate'
 
@@ -43,13 +40,8 @@ jobs:
     displayName: 'Terraform Plan'
 
   - script: |
-      read -p "Do you want to apply the Terraform changes? Set TF_APPROVE='yes' to apply, or 'no' to cancel." TF_APPROVE
-
-      # Set a default value if TF_APPROVE is empty
-      TF_APPROVE="${TF_APPROVE:-no}"
-
-      if [ "$TF_APPROVE" != "yes" ]; then
-          echo "Pipeline execution canceled."
+      if [ "$APPROVE_TF_CHANGES" != "yes" ]; then
+          echo "Pipeline execution canceled due to lack of approval."
           exit 1
       fi
     displayName: 'Prompt for Approval'
@@ -58,4 +50,4 @@ jobs:
       cd $(Build.SourcesDirectory)/azure-1
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
-    condition: succeededOrFailed()  
+    condition: succeededOrFailed()
