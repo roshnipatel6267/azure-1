@@ -4,10 +4,6 @@ trigger:
 pr:
 - dev
 
-variables:
-  requireApproval: true
-  TF_APPROVE: 'no'
-
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -25,13 +21,16 @@ jobs:
       performMultiLevelLookup: true
 
   - script: |
-      ls -la
+      ls -la   # List files in the current directory for debugging
+      pwd      # Print the current working directory for debugging
       cd $(Build.SourcesDirectory)/azure-1
+      pwd      # Print the current working directory again for debugging
       terraform init
     displayName: 'Terraform Init'
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
+      ls -la   # List files in the current directory for debugging
       terraform validate
     displayName: 'Terraform Validate'
 
@@ -44,11 +43,17 @@ jobs:
     displayName: 'Terraform Plan'
 
   - script: |
-      echo 'no' > tf_approval.txt
-      if [ "$(cat tf_approval.txt)" == "yes" ]; then
-        cd $(Build.SourcesDirectory)/azure-1
-        terraform apply -auto-approve tfplan
-      else
-        echo "Pipeline execution canceled."
+      echo "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel:"
+      read TF_APPROVE
+      if [ "$TF_APPROVE" != "yes" ]; then
+          echo "Pipeline execution canceled."
+          exit 1
       fi
+    displayName: 'Prompt for Approval'
+
+  - script: |
+      cd $(Build.SourcesDirectory)/azure-1
+      terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
+    condition: succeededOrFailed()   # Continue regardless of manual approval result
+
