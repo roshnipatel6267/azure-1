@@ -43,7 +43,8 @@ jobs:
       displayName: 'Terraform Plan'
 
     - script: |
-        read -p "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel: " result
+        echo "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel."
+        read result
         if [ "$result" != "y" ]; then
             echo "Pipeline execution canceled."
             exit 1
