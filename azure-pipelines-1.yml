@@ -15,7 +15,7 @@ jobs:
 
 - job: manual_approval
   displayName: "Manual Approval"
-  dependsOn: terraform_approval
+  dependsOn: terraform_init
   pool:
     vmImage: server
   steps:
