@@ -4,13 +4,6 @@ trigger:
 pr:
 - dev
 
-variables:
-- name: TF_APPROVE
-  value: 'no'  # Set a default value
-
-- name: GUI_PROMPT
-  value: 'no'  # Set to 'yes' if you want to use a GUI prompt
-
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -51,25 +44,15 @@ jobs:
       displayName: 'Terraform Plan'
 
     - script: |
-        if [ "$(GUI_PROMPT)" == "yes" ]; then
-            # Use a GUI prompt (replace this with your GUI prompt logic)
-            echo "Use GUI Prompt logic here."
-            # Set TF_APPROVE based on GUI input
-            # echo "##vso[task.setvariable variable=TF_APPROVE;isOutput=true]$GUI_PROMPT_VALUE"
-        else
-            # Use a command-line prompt
-            read -p "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel: " TF_APPROVE
-            echo "##vso[task.setvariable variable=TF_APPROVE;isOutput=true]$TF_APPROVE"
-        fi
+        echo "##vso[task.setvariable variable=TF_APPROVE;isOutput=true]$(read -p 'Do you want to apply the Terraform changes? Type yes to apply, or no to cancel: '; echo $REPLY)"
       displayName: 'Prompt for Approval'
 
     - script: |
         if [ "$(TF_APPROVE)" == "yes" ]; then
             echo "Applying Terraform Changes..."
-            cd $(Build.SourcesDirectory)/azure-1
             terraform apply -auto-approve tfplan
         else
             echo "Pipeline execution canceled."
+            exit 1
         fi
       displayName: 'Apply Terraform Changes'
-      condition: succeededOrFailed()
