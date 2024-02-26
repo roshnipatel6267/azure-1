@@ -44,12 +44,16 @@ jobs:
     displayName: 'Terraform Plan'
 
   - script: |
-      echo "##vso[task.setvariable variable=TF_APPROVE]$(read -p 'Do you want to apply the Terraform changes? Type ''yes'' to apply, or ''no'' to cancel: '; echo $REPLY)"
+      echo 'no' > tf_approval.txt
+      read -p 'Do you want to apply the Terraform changes? Type ''yes'' to apply, or ''no'' to cancel: ' TF_APPROVE
+      echo $TF_APPROVE > tf_approval.txt
     displayName: 'Prompt for Approval'
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
-      terraform apply -auto-approve tfplan
+      if [ "$(cat tf_approval.txt)" == "yes" ]; then
+        terraform apply -auto-approve tfplan
+      else
+        echo "Pipeline execution canceled."
+      fi
     displayName: 'Apply Terraform Changes'
-    condition: eq(variables['TF_APPROVE'], 'yes')
-
