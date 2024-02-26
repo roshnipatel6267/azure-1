@@ -4,6 +4,11 @@ trigger:
 pr:
 - dev
 
+parameters:
+  - name: requireApproval
+    type: boolean
+    default: false
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -35,19 +40,19 @@ jobs:
       az login 
 
   - script: |
+      if [ "$(requireApproval)" == "true" ]; then
+          echo "Pipeline execution requires approval."
+          exit 1
+      fi
+    displayName: 'Check for Approval'
+
+  - script: |
       cd $(Build.SourcesDirectory)/azure-1
       terraform plan -out=tfplan -input=false
     displayName: 'Terraform Plan'
 
   - script: |
-      if [ "$APPROVE_TF_CHANGES" != "yes" ]; then
-          echo "Pipeline execution canceled due to lack of approval."
-          exit 1
-      fi
-    displayName: 'Prompt for Approval'
-
-  - script: |
       cd $(Build.SourcesDirectory)/azure-1
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
-    condition: succeededOrFailed()
+    condition: eq(variables['requireApproval'], false)
