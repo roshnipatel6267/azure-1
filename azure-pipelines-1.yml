@@ -43,11 +43,11 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: ManualValidation@0
+    - task: manual-validation-task@1
       displayName: 'Prompt for Approval'
       inputs:
-        instructions: 'Do you want to apply the Terraform changes? Type "yes" to apply, or "no" to cancel.'
         notifyUsers: 'rosy69092@gmail.com'
+        instructions: 'Do you want to apply the Terraform changes? Type "yes" to apply, or "no" to cancel.'
 
     - script: |
         if [ "$(APPROVAL_REASON)" == "yes" ]; then
