@@ -7,6 +7,9 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  TF_APPROVE: 'no'  # Default value, change as needed
+
 jobs:
 - job: TerraformDeployment
   displayName: 'Terraform Deployment'
@@ -44,23 +47,16 @@ jobs:
       displayName: 'Terraform Plan'
 
     - script: |
-        echo "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel."
-        read -p "Type your choice: " TF_APPROVE
-        if [ "$TF_APPROVE" == "yes" ]; then
-            echo "Proceeding with applying Terraform changes..."
-            echo "##vso[task.setvariable variable=TF_APPROVE;isOutput=true]$TF_APPROVE"
-        else
-            echo "Pipeline execution canceled."
-            exit 1
-        fi
+        echo "Do you want to apply the Terraform changes?"
+        echo "TF_APPROVE=$(TF_APPROVE)"
+        echo "##vso[task.setvariable variable=TF_APPROVE;isOutput=true]$(TF_APPROVE)"
       displayName: 'Prompt for Approval'
 
     - script: |
-        if [ "$TF_APPROVE" == "yes" ]; then
-            echo "Applying Terraform Changes..."
+        if [ "$(TF_APPROVE)" == "yes" ]; then
+            echo "Proceeding with applying Terraform changes..."
             terraform apply -auto-approve tfplan
         else
             echo "Pipeline execution canceled. No changes will be applied."
-            exit 1
         fi
       displayName: 'Apply Terraform Changes'
