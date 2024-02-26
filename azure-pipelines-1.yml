@@ -5,7 +5,7 @@ pr:
 - dev
 
 variables:
-  requireApproval: true  # Set this to true if you want to trigger approval
+  requireApproval: false
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -45,6 +45,13 @@ jobs:
       fi
     displayName: 'Check for Approval'
 
+  - task: ManualValidation@0
+    displayName: 'Manual Approval'
+    inputs:
+      instructions: 'Review the Terraform changes and approve or reject.'
+      onTimeout: 'reject'
+      timeoutInMinutes: 1440 # 24 hours
+
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
       terraform plan -out=tfplan -input=false
@@ -55,4 +62,4 @@ jobs:
       echo "Applying Terraform Changes..."
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
-    condition: eq(variables['requireApproval'], true)
+    condition: eq(variables['requireApproval'], false)
