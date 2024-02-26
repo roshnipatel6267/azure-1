@@ -43,11 +43,11 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: ManualValidation@0
+    - script: |
+        echo "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel."
+        read -r APPROVAL_REASON
+        echo "##vso[task.setvariable variable=APPROVAL_REASON;isOutput=true]$APPROVAL_REASON"
       displayName: 'Prompt for Approval'
-      inputs:
-        notifyUsers: 'rosy69092@gmail.com'
-        instructions: 'Do you want to apply the Terraform changes? Type "yes" to apply, or "no" to cancel.'
 
     - script: |
         if [ "$(APPROVAL_REASON)" == "yes" ]; then
