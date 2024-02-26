@@ -17,7 +17,7 @@ jobs:
   displayName: "Manual Approval"
   dependsOn: terraform_approval
   pool:
-    vmImage: 'ubuntu-latest'
+    vmImage: server
   steps:
     - task: ManualValidation@0
       timeoutInMinutes: 5
