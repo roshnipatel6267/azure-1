@@ -43,14 +43,14 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: ManualValidation@0
+    - task: ManualIntervention@8
       displayName: 'Prompt for Approval'
       inputs:
-        notifyUsers: 'rosy69092@gmail.com'
         instructions: 'Do you want to apply the Terraform changes? Type "yes" to apply, or "no" to cancel.'
+        emailRecipients: 'rosy69092@gmail.com'
 
     - script: |
-        if [ "$(MANUAL_APPROVAL)" == "yes" ]; then
+        if [ "$(APPROVAL_REASON)" == "yes" ]; then
             echo "Applying Terraform Changes..."
             terraform apply -auto-approve tfplan
         else
