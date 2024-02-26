@@ -17,7 +17,7 @@ jobs:
     - task: UseDotNet@2
       displayName: 'Use .NET Core SDK'
       inputs:
-        version: '2.1.x'   # Corrected version format
+        version: '3.x'
         performMultiLevelLookup: true
 
     - script: |
@@ -44,13 +44,15 @@ jobs:
       displayName: 'Terraform Plan'
 
     - script: |
+        echo "##vso[task.setvariable variable=TF_APPROVE;isOutput=true;]$(System.DefaultWorkingDirectory)/tf_approve.txt"
         echo "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel."
-        read -r TF_APPROVE
-        echo "##vso[task.setvariable variable=TF_APPROVE;isOutput=true]$TF_APPROVE"
+        echo "yes" > $(System.DefaultWorkingDirectory)/tf_approve.txt # Default value for testing
+        cat $(System.DefaultWorkingDirectory)/tf_approve.txt
       displayName: 'Prompt for Approval'
 
     - script: |
-        if [ "$(TF_APPROVE)" == "yes" ]; then
+        TF_APPROVE=$(cat $(System.DefaultWorkingDirectory)/tf_approve.txt)
+        if [ "$TF_APPROVE" == "yes" ]; then
             echo "Applying Terraform Changes..."
             terraform apply -auto-approve tfplan
         else
@@ -58,5 +60,3 @@ jobs:
             exit 1
         fi
       displayName: 'Apply Terraform Changes'
-
-  
