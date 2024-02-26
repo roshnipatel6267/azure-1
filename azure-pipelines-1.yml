@@ -7,13 +7,6 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-- job: TerraformDeployment
-  displayName: 'Terraform Deployment'
-  steps:
-  - checkout: self
-    submodules: true
-
   - script: |
       ls -la   
       pwd      
@@ -21,6 +14,22 @@ jobs:
       pwd     
       terraform init
     displayName: 'Terraform Init'
+
+- job: manual_approval
+  displayName: "Manual Approval"
+  dependsOn: terraform_approval
+  pool: server
+  steps:
+  - task: ManualValidation@0
+    timeoutInMinutes: 5
+    inputs:
+      instructions: "Hi, please validate"
+
+  - script: |
+      cd $(Build.SourcesDirectory)/azure-1
+      ls -la
+      terraform validate
+    displayName: 'Terraform Validate'
 
   - script: |
       az login 
