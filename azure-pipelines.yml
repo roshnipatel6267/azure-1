@@ -8,54 +8,55 @@ pool:
   vmImage: 'ubuntu-latest'
 
 jobs:
-- job: TerraformDeployment
-  displayName: 'Terraform Deployment'
+- job: terraform_approval
+  displayName: "Terraform Approval"
   steps:
-  - checkout: self
-    submodules: true
+    - script: 
+        echo "Terraform Approval Job"
+      displayName: 'Terraform Approval'
+      condition: succeededOrFailed()
 
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core SDK'
-    inputs:
-      version: '3.x'
-      performMultiLevelLookup: true
+- job: manual_approval
+  displayName: "Manual Approval"
+  dependsOn: terraform_approval
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - script: 
+        echo "Manual Approval Job"
+      displayName: 'Manual Approval'
+      condition: succeededOrFailed()
 
-  - script: |
-      cd azure-1
-      terraform init
-    displayName: 'Terraform Init'
+    - script: |
+        ls -la
+        pwd
+        cd $(Build.SourcesDirectory)/azure-1
+        pwd
+        terraform init
+      displayName: 'Terraform Init'
 
-  - script: |
-      cd azure-1
-      terraform validate
-    displayName: 'Terraform Validate'
+    - script: |
+        cd $(Build.SourcesDirectory)/azure-1
+        terraform validate
+      displayName: 'Terraform Validate'
 
-  - script: |
-      cd azure-1
-      terraform plan -out=tfplan
-    displayName: 'Terraform Plan'
+    - script: |
+        az login 
+    - script: |
+        cd $(Build.SourcesDirectory)/azure-1
+        terraform plan -out=tfplan
+      displayName: 'Terraform Plan'
 
-  - task: ManualValidation@0
-    displayName: 'Manual Approval'
-    inputs:
-      instructions: 'Review the Terraform changes and approve or reject.'
-      onTimeout: 'reject'
-      timeoutInMinutes: 1440 
+    - script: |
+        read -p "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel: " result
+        if [ "$result" != "y" ]; then
+            echo "Pipeline execution canceled."
+            exit 1
+        fi
+      displayName: 'Prompt for Approval'
 
-  - powershell: |
-      param (
-        [string]$result = "Reject"
-      )
-
-      $result = Read-Host "Do you want to apply the Terraform changes? Type 'Approve' to apply, or 'Reject' to cancel."
-
-      if ($result -ne "Approve") {
-          Write-Output "Pipeline execution canceled."
-          exit 1
-      }
-  displayName: 'Prompt for Approval'
-
-  - script: |
-      cd azure-1
-      terraform apply -auto-approve tfplan
-    displayName: 'Apply Terraform Changes'
+    - script: |
+        cd $(Build.SourcesDirectory)/azure-1
+        terraform apply -auto-approve tfplan
+      displayName: 'Apply Terraform Changes'
+      condition: succeededOrFailed()
