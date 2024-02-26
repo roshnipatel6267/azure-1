@@ -5,7 +5,7 @@ pr:
 - dev
 
 variables:
-  requireApproval: false
+  requireApproval: true
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -45,16 +45,18 @@ jobs:
       fi
     displayName: 'Check for Approval'
 
-  - task: ManualValidation@2
-    displayName: 'Manual Approval'
-    inputs:
-      instructions: 'Review the Terraform changes and approve or reject.'
-      onTimeout: 'reject'
-      timeoutInMinutes: 1440 # 24 hours
+  - script: |
+      read -p "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel: " result
+
+      if [ "$result" != "yes" ]; then
+          echo "Pipeline execution canceled."
+          exit 1
+      fi
+    displayName: 'Prompt for Approval'
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
-      terraform plan -out=tfplan -input=false
+      terraform plan -out=tfplan -input=true
     displayName: 'Terraform Plan'
 
   - script: |
@@ -62,4 +64,4 @@ jobs:
       echo "Applying Terraform Changes..."
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
-    condition: eq(variables['requireApproval'], false)
+    condition: eq(variables['requireApproval'], true)
