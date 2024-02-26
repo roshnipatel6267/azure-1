@@ -14,7 +14,7 @@ pool:
       pwd     
       terraform init
     displayName: 'Terraform Init'
-
+jobs:
 - job: manual_approval
   displayName: "Manual Approval"
   dependsOn: terraform_approval
@@ -44,7 +44,7 @@ pool:
           echo "Pipeline execution canceled."
           exit 1
       fi
-    displayName: 'Prompt for Approval'
+    displayName: 'Manual Approval'
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
