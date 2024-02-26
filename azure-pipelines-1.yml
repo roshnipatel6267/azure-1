@@ -19,7 +19,7 @@ jobs:
   pool:
     vmImage: server
   steps:
-    - task: ManualValidation@0
+    - task: ManualValidation@2
       timeoutInMinutes: 5
       inputs:
         instructions: "Hi, please validate"
