@@ -1,5 +1,3 @@
-
-
 trigger:
 - dev
 
@@ -10,15 +8,23 @@ pool:
   vmImage: 'ubuntu-latest'
 
 jobs:
-- job: TerraformDeployment
-  displayName: 'Terraform Deployment'
+- job: terraform_init
+  displayName: 'Terraform Init'
   steps:
   - checkout: self
     submodules: true
 
+  - script: |
+      ls -la
+      pwd
+      cd $(Build.SourcesDirectory)/azure-1
+      pwd
+      terraform init
+    displayName: 'Terraform Init'
+
 - job: manual_approval
   displayName: "Manual Approval"
-  dependsOn: terraform_approval
+  dependsOn: terraform_init
   pool: server
   steps:
   - task: ManualValidation@0
@@ -26,31 +32,25 @@ jobs:
     inputs:
       instructions: "Hi, please validate"
 
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core SDK'
-    inputs:
-      version: '3.x'
-      performMultiLevelLookup: true
-
-  - script: |
-      ls -la   
-      pwd      
-      cd $(Build.SourcesDirectory)/azure-1
-      pwd     
-      terraform init
-    displayName: 'Terraform Init'
+- job: TerraformDeployment
+  displayName: 'Terraform Deployment'
+  dependsOn: manual_approval
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - checkout: self
+    submodules: true
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
-      ls -la   # List files in the current directory for debugging
+      ls -la
       terraform validate
     displayName: 'Terraform Validate'
 
   - script: |
-      az login 
+      az login
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
-      ls -la   # List files in the current directory for debugging
       terraform plan -out=tfplan
     displayName: 'Terraform Plan'
 
