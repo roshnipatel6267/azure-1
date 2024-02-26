@@ -50,10 +50,9 @@ jobs:
 - job: manual_intervention
   displayName: 'Manual Approval Intervention'
   dependsOn: manual_approval
-  pool:
-    vmImage: 'ubuntu-latest'
+  pool: server
   steps:
-    - task: ManualIntervention@1
+    - task: ManualValidation@0
+      timeoutInMinutes: 5
       inputs:
         instructions: 'Please review and manually approve the Terraform changes.'
-        notifyUsers: 'all'
