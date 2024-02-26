@@ -43,7 +43,7 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: ManualValidation@0
+    - task: ManualValidation@1
       displayName: 'Prompt for Approval'
       inputs:
         instructions: 'Review Terraform changes and approve if necessary'
