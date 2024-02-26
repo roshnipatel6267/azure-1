@@ -68,13 +68,13 @@ jobs:
     vmImage: 'ubuntu-latest'
   steps:
     - script: |
-    cd $(Build.SourcesDirectory)/azure-1
-    pwd
-    ls -la
-    terraform init
-    terraform apply -auto-approve ./tfplan
-    if [ $? -ne 0 ]; then
-      echo "Error: Terraform apply failed. Please check the apply output for details."
-      exit 1
-    fi
-  displayName: 'Apply Terraform Changes'
+        cd $(Build.SourcesDirectory)/azure-1
+        pwd
+        ls -la
+        terraform init
+        terraform apply -auto-approve ./tfplan
+        if [ $? -ne 0 ]; then
+          echo "Error: Terraform apply failed. Please check the apply output for details."
+          exit 1
+        fi
+      displayName: 'Apply Terraform Changes'
