@@ -40,6 +40,7 @@ jobs:
       az login 
 
   - script: |
+      echo "requireApproval: $(requireApproval)"
       if [ "$(requireApproval)" == "true" ]; then
           echo "Pipeline execution requires approval."
           exit 1
@@ -48,11 +49,7 @@ jobs:
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
-      terraform plan -out=tfplan -input=false
-    displayName: 'Terraform Plan'
-
-  - script: |
-      cd $(Build.SourcesDirectory)/azure-1
+      echo "Applying Terraform Changes..."
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
     condition: eq(variables['requireApproval'], false)
