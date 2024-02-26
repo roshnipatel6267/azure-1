@@ -43,7 +43,7 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: manual-validation-task@1
+    - task: ManualValidation@0
       displayName: 'Prompt for Approval'
       inputs:
         notifyUsers: 'rosy69092@gmail.com'
