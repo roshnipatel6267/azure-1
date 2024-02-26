@@ -5,7 +5,7 @@ pr:
 - dev
 
 variables:
-  requireApproval: false
+  requireApproval: true  # Set this to true if you want to trigger approval
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -55,4 +55,4 @@ jobs:
       echo "Applying Terraform Changes..."
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
-    condition: eq(variables['requireApproval'], false)
+    condition: eq(variables['requireApproval'], true)
