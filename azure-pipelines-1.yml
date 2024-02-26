@@ -43,7 +43,7 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: ManualIntervention@8
+    - task: ManualIntervention@
       inputs:
         instructions: 'Please review the Terraform changes and click "Resume" to apply or "Reject" to cancel.'
         notifyUsers: 'me'
