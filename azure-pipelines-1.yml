@@ -56,3 +56,14 @@ jobs:
       timeoutInMinutes: 5
       inputs:
         instructions: 'Please review and manually approve the Terraform changes.'
+
+- job: apply_changes
+  displayName: 'Apply Terraform Changes'
+  dependsOn: manual_intervention
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - script: |
+        cd $(Build.SourcesDirectory)/azure-1
+        terraform apply -auto-approve tfplan
+      displayName: 'Apply Terraform Changes'
