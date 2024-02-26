@@ -35,11 +35,8 @@ jobs:
     displayName: 'Terraform Validate'
 
   - script: |
-      az login 
-  - script: |
       cd $(Build.SourcesDirectory)/azure-1
-      ls -la   # List files in the current directory for debugging
-      terraform plan -out=tfplan
+      terraform plan -out=tfplan -input=false
     displayName: 'Terraform Plan'
 
   - script: |
@@ -55,4 +52,3 @@ jobs:
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
     condition: succeededOrFailed()  # Continue regardless of manual approval result
-
