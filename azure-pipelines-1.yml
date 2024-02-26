@@ -35,6 +35,8 @@ jobs:
     displayName: 'Terraform Validate'
 
   - script: |
+      az login 
+  - script: |
       cd $(Build.SourcesDirectory)/azure-1
       ls -la   # List files in the current directory for debugging
       terraform plan -out=tfplan
