@@ -7,6 +7,7 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+jobs:
 - job: TerraformDeployment
   displayName: 'Terraform Deployment'
   steps:
