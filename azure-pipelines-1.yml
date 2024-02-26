@@ -11,44 +11,52 @@ jobs:
 - job: terraform_approval
   displayName: "Terraform Approval"
   steps:
-    - script: echo "Terraform Approval Job"
+    - script: 
+        echo "Terraform Approval Job"
+      displayName: 'Terraform Approval'
+      condition: succeededOrFailed()
 
 - job: manual_approval
   displayName: "Manual Approval"
   dependsOn: terraform_approval
   pool:
-    vmImage: server
+    vmImage: 'ubuntu-latest'
   steps:
-    - task: ManualValidation@0
-      timeoutInMinutes: 5
-      inputs:
-        instructions: "Hi, please validate"
+    - script: 
+        echo "Manual Approval Job"
+      displayName: 'Manual Approval'
+      condition: succeededOrFailed()
 
-    - script: |
+    - script: 
+        ls -la   
+        pwd      
+        cd $(Build.SourcesDirectory)/azure-1
+        pwd     
+        terraform init
+      displayName: 'Terraform Init'
+
+    - script: 
         cd $(Build.SourcesDirectory)/azure-1
         ls -la
         terraform validate
       displayName: 'Terraform Validate'
 
-    - script: |
+    - script: 
         az login 
-    - script: |
+    - script: 
         cd $(Build.SourcesDirectory)/azure-1
         terraform plan -out=tfplan
       displayName: 'Terraform Plan'
 
-    - bash: echo "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel."
-      displayName: 'Manual Approval Prompt'
-
-    - bash: |
-        read result
+    - script: |
+        read -p "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel: " result
         if [ "$result" != "y" ]; then
             echo "Pipeline execution canceled."
             exit 1
         fi
-      displayName: 'Manual Approval'
-    
-    - script: |
+      displayName: 'Prompt for Approval'
+
+    - script: 
         cd $(Build.SourcesDirectory)/azure-1
         terraform apply -auto-approve tfplan
       displayName: 'Apply Terraform Changes'
