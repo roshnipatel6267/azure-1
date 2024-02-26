@@ -27,23 +27,22 @@ jobs:
       displayName: 'Manual Approval'
       condition: succeededOrFailed()
 
-    - script: 
-        ls -la   
-        pwd      
+    - script: |
+        ls -la
+        pwd
         cd $(Build.SourcesDirectory)/azure-1
-        pwd     
+        pwd
         terraform init
       displayName: 'Terraform Init'
 
-    - script: 
+    - script: |
         cd $(Build.SourcesDirectory)/azure-1
-        ls -la
         terraform validate
       displayName: 'Terraform Validate'
 
-    - script: 
+    - script: |
         az login 
-    - script: 
+    - script: |
         cd $(Build.SourcesDirectory)/azure-1
         terraform plan -out=tfplan
       displayName: 'Terraform Plan'
@@ -56,7 +55,7 @@ jobs:
         fi
       displayName: 'Prompt for Approval'
 
-    - script: 
+    - script: |
         cd $(Build.SourcesDirectory)/azure-1
         terraform apply -auto-approve tfplan
       displayName: 'Apply Terraform Changes'
