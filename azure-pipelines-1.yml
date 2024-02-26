@@ -38,25 +38,19 @@ jobs:
       az login 
 
   - script: |
-      echo "requireApproval: $(requireApproval)"
-      if [ "$(requireApproval)" == "true" ]; then
-          echo "Pipeline execution requires approval."
-          exit 1
-      fi
-    displayName: 'Check for Approval'
-
-  - script: |
       read -p "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel: " result
 
       if [ "$result" != "yes" ]; then
           echo "Pipeline execution canceled."
           exit 1
+      else
+          echo "##vso[task.setvariable variable=requireApproval]false"
       fi
     displayName: 'Prompt for Approval'
 
   - script: |
       cd $(Build.SourcesDirectory)/azure-1
-      terraform plan -out=tfplan -input=true
+      terraform plan -out=tfplan -input=false
     displayName: 'Terraform Plan'
 
   - script: |
@@ -64,4 +58,4 @@ jobs:
       echo "Applying Terraform Changes..."
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
-    condition: eq(variables['requireApproval'], true)
+    condition: eq(variables['requireApproval'], false)
