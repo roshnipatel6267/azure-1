@@ -43,7 +43,7 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: ManualIntervention@8
+    - task: ManualIntervention@0
       displayName: 'Prompt for Approval'
       inputs:
         instructions: 'Do you want to apply the Terraform changes? Type "yes" to apply, or "no" to cancel.'
