@@ -15,9 +15,8 @@ jobs:
 
 - job: manual_approval
   displayName: "Manual Approval"
-  dependsOn: terraform_init
-  pool:
-    vmImage: server
+  dependsOn: terraform_approval
+  pool: server
   steps:
     - task: ManualValidation@0
       timeoutInMinutes: 5
