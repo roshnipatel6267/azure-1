@@ -8,39 +8,45 @@ pool:
   vmImage: 'ubuntu-latest'
 
 jobs:
+- job: terraform_approval
+  displayName: "Terraform Approval"
+  steps:
+    - script: echo "Terraform Approval Job"
+
 - job: manual_approval
   displayName: "Manual Approval"
   dependsOn: terraform_approval
-  pool: server
+  pool:
+    vmImage: 'ubuntu-latest'  # Use an appropriate agent pool
   steps:
-  - task: ManualValidation@0
-    timeoutInMinutes: 5
-    inputs:
-      instructions: "Hi, please validate"
+    - task: ManualValidation@0
+      timeoutInMinutes: 5
+      inputs:
+        instructions: "Hi, please validate"
 
-  - script: |
-      cd $(Build.SourcesDirectory)/azure-1
-      ls -la
-      terraform validate
-    displayName: 'Terraform Validate'
+    - script: |
+        cd $(Build.SourcesDirectory)/azure-1
+        ls -la
+        terraform validate
+      displayName: 'Terraform Validate'
 
-  - script: |
-      az login 
-  - script: |
-      cd $(Build.SourcesDirectory)/azure-1
-      terraform plan -out=tfplan
-    displayName: 'Terraform Plan'
+    - script: |
+        az login 
+    - script: |
+        cd $(Build.SourcesDirectory)/azure-1
+        terraform plan -out=tfplan
+      displayName: 'Terraform Plan'
 
-  - script: |
-      read -p "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel: " result
-      if [ "$result" != "y" ]; then
-          echo "Pipeline execution canceled."
-          exit 1
-      fi
-    displayName: 'Manual Approval'
+    - script: |
+        read -p "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel: " result
+        if [ "$result" != "y" ]; then
+            echo "Pipeline execution canceled."
+            exit 1
+        fi
+      displayName: 'Manual Approval'
 
-  - script: |
-      cd $(Build.SourcesDirectory)/azure-1
-      terraform apply -auto-approve tfplan
-    displayName: 'Apply Terraform Changes'
-    condition: succeededOrFailed()
+    - script: |
+        cd $(Build.SourcesDirectory)/azure-1
+        terraform apply -auto-approve tfplan
+      displayName: 'Apply Terraform Changes'
+      condition: succeededOrFailed()
