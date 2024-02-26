@@ -40,7 +40,7 @@ jobs:
     inputs:
       instructions: 'Review the Terraform changes and approve or reject.'
       onTimeout: 'reject'
-      timeoutInMinutes: 1440 # 24 hours
+      timeoutInMinutes: 1440 
 
   - powershell: |
       param (
