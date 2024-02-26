@@ -41,6 +41,10 @@ jobs:
       ls -la   # List files in the current directory for debugging
       terraform plan -out=tfplan
     displayName: 'Terraform Plan'
+  - task: ManualValidation@0
+    inputs:
+      notifyUsers: 'rosy69092@gmail.com'
+      instructions: 'yes or no'
 
   - script: |
       read -p "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel: " result
@@ -55,7 +59,3 @@ jobs:
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
     condition: succeededOrFailed()
-- task: ManualValidation@0
-  inputs:
-    notifyUsers: 'rosy69092@gmail.com'
-    instructions: 'yes or no'
