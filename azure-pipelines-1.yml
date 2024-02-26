@@ -43,13 +43,6 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: ManualIntervention@8
-      displayName: 'Prompt for Approval'
-      inputs:
-        instructions: 'Review Terraform changes and approve if necessary'
-        notifyUsers: 'me@example.com'
-        timeoutInMinutes: 1440 # You can adjust the timeout as needed
-
     - script: |
         echo "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel."
         read -r TF_APPROVE
@@ -61,3 +54,14 @@ jobs:
             exit 1
         fi
       displayName: 'Apply Terraform Changes'
+      condition: and(succeeded(), eq(variables['TF_APPROVE'], 'yes'))
+
+- job: ManualIntervention
+  displayName: 'Manual Intervention'
+  dependsOn: TerraformDeployment
+  condition: and(succeeded(), ne(variables['TF_APPROVE'], 'yes'))
+  steps:
+    - script: |
+        echo "Manual intervention required."
+        # Add any manual intervention steps or notifications here
+      displayName: 'Manual Intervention'
