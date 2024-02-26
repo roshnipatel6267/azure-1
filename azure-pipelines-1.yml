@@ -4,10 +4,8 @@ trigger:
 pr:
 - dev
 
-parameters:
-  - name: requireApproval
-    type: boolean
-    default: false
+variables:
+  requireApproval: false
 
 pool:
   vmImage: 'ubuntu-latest'
