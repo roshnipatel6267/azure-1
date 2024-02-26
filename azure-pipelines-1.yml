@@ -42,7 +42,7 @@ jobs:
       terraform plan -out=tfplan -input=false
     displayName: 'Terraform Plan'
 
-  - task: ManualIntervention@
+  - task: ManualIntervention@8
     inputs:
       instructions: 'approve for yes or no'
       emailRecipients: 'rosy69092@gmail.com'
@@ -59,3 +59,4 @@ jobs:
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
     condition: succeededOrFailed()  # Continue regardless of manual approval result
+
