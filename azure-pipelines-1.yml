@@ -4,10 +4,6 @@ trigger:
 pr:
 - dev
 
-parameters:
-- name: TF_APPROVE
-  displayName: 'Do you want to apply the Terraform changes? Type yes to apply, or no to cancel.'
-
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -47,8 +43,14 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
+    - task: ManualValidation@0
+      displayName: 'Prompt for Approval'
+      inputs:
+        notifyUsers: 'rosy69092@gmail.com'
+        instructions: 'Do you want to apply the Terraform changes? Type "yes" to apply, or "no" to cancel.'
+
     - script: |
-        if [ "$(TF_APPROVE)" == "yes" ]; then
+        if [ "$(MANUAL_APPROVAL)" == "yes" ]; then
             echo "Applying Terraform Changes..."
             terraform apply -auto-approve tfplan
         else
