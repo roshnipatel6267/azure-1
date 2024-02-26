@@ -43,10 +43,9 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - script: |
-        echo "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel."
-        read -r APPROVAL_REASON
-        echo "##vso[task.setvariable variable=APPROVAL_REASON;isOutput=true]$APPROVAL_REASON"
+    - powershell: |
+        $result = Read-Host -Prompt 'Do you want to apply the Terraform changes? Type "yes" to apply, or "no" to cancel.'
+        Write-Host "##vso[task.setvariable variable=APPROVAL_REASON;isOutput=true]$result"
       displayName: 'Prompt for Approval'
 
     - script: |
