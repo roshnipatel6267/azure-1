@@ -42,16 +42,13 @@ jobs:
       terraform plan -out=tfplan -input=false
     displayName: 'Terraform Plan'
 
-  - task: ManualIntervention@2
-    inputs:
-      instructions: 'approve for yes or no'
-      emailRecipients: 'rosy69092@gmail.com'
-      onTimeout: 'resume'
-      
   - script: |
-      echo "Do you want to apply the Terraform changes? Set TF_APPROVE='yes' to apply, or 'no' to cancel."
-      read -r TF_APPROVE
-      echo "##vso[task.setvariable variable=TF_APPROVE;isOutput=true]$TF_APPROVE"
+      echo "Do you want to apply the Terraform changes? Type 'yes' to apply, or 'no' to cancel."
+      read -p "TF_APPROVE: " TF_APPROVE
+      if [ "$TF_APPROVE" != "yes" ]; then
+          echo "Pipeline execution canceled."
+          exit 1
+      fi
     displayName: 'Prompt for Approval'
 
   - script: |
@@ -59,4 +56,3 @@ jobs:
       terraform apply -auto-approve tfplan
     displayName: 'Apply Terraform Changes'
     condition: succeededOrFailed()  # Continue regardless of manual approval result
-
