@@ -65,5 +65,5 @@ jobs:
   steps:
     - script: |
         cd $(Build.SourcesDirectory)/azure-1
-        terraform apply -auto-approve tfplan
+        terraform apply -auto-approve 
       displayName: 'Apply Terraform Changes'
