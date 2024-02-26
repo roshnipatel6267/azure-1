@@ -72,7 +72,7 @@ jobs:
         pwd
         ls -la
         terraform init
-        terraform apply -auto-approve ./tfplan
+        terraform apply -auto-approve $(Build.SourcesDirectory)/azure-1/tfplan
         if [ $? -ne 0 ]; then
           echo "Error: Terraform apply failed. Please check the apply output for details."
           exit 1
