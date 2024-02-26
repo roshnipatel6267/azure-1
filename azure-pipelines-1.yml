@@ -47,14 +47,13 @@ jobs:
         terraform plan -out=tfplan
       displayName: 'Terraform Plan'
 
+- job: manual_intervention
+  displayName: 'Manual Approval Intervention'
+  dependsOn: manual_approval
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
     - task: ManualIntervention@1
       inputs:
         instructions: 'Please review and manually approve the Terraform changes.'
         notifyUsers: 'all'
-      displayName: 'Manual Approval Intervention'
-
-    - script: |
-        cd $(Build.SourcesDirectory)/azure-1
-        terraform apply -auto-approve tfplan
-      displayName: 'Apply Terraform Changes'
-      condition: succeededOrFailed()
