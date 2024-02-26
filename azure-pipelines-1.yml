@@ -17,7 +17,7 @@ jobs:
     - task: UseDotNet@2
       displayName: 'Use .NET Core SDK'
       inputs:
-        version: '2.*'  # Corrected version format
+        version: '2.1.x'   # Corrected version format
         performMultiLevelLookup: true
 
     - script: |
