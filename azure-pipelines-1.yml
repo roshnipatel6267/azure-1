@@ -18,11 +18,10 @@ jobs:
   dependsOn: terraform_approval
   pool: server
   steps:
-    - task: ManualValidation@0
-      timeoutInMinutes: 5
-      inputs:
-        instructions: "Hi, please validate"
-    
+    - script: |
+        echo "##vso[task.setvariable variable=TF_APPROVE;]$(System.DefaultWorkingDirectory)"
+      displayName: 'Set TF_APPROVE Variable'
+
     - script: |
         cd $(Build.SourcesDirectory)/azure-1
         ls -la
