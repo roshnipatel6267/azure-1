@@ -47,13 +47,11 @@ jobs:
         terraform plan -out=tfplan
       displayName: 'Terraform Plan'
 
-    - script: |
-        read -p "Do you want to apply the Terraform changes? Type 'y' to apply, or 'n' to cancel: " result
-        if [ "$result" != "y" ]; then
-            echo "Pipeline execution canceled."
-            exit 1
-        fi
-      displayName: 'Prompt for Approval'
+    - task: ManualIntervention@1
+      inputs:
+        instructions: 'Please review and manually approve the Terraform changes.'
+        notifyUsers: 'all'
+      displayName: 'Manual Approval Intervention'
 
     - script: |
         cd $(Build.SourcesDirectory)/azure-1
