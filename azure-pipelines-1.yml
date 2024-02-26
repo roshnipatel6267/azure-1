@@ -43,7 +43,7 @@ jobs:
         terraform plan -out=tfplan -input=false
       displayName: 'Terraform Plan'
 
-    - task: ManualIntervention@0
+    - task: ManualValidation@0
       displayName: 'Prompt for Approval'
       inputs:
         instructions: 'Review Terraform changes and approve if necessary'
@@ -53,3 +53,4 @@ jobs:
         cd $(Build.SourcesDirectory)/azure-1
         terraform apply -auto-approve tfplan
       displayName: 'Apply Terraform Changes'
+
