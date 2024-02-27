@@ -71,6 +71,7 @@ jobs:
     steps:
       - script: |
           cd $(Build.SourcesDirectory)/azure-1
+          terraform init
           az login 
           terraform apply -auto-approve
           if [ $? -ne 0 ]; then
