@@ -71,9 +71,7 @@ jobs:
     steps:
       - script: |
           cd $(Build.SourcesDirectory)/azure-1
-          pwd
-          ls -la
-          terraform init
+          az login 
           terraform apply -auto-approve
           if [ $? -ne 0 ]; then
             echo "Error: Terraform apply failed. Please check the apply output for details."
