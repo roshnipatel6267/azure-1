@@ -44,7 +44,7 @@ jobs:
         az login 
     - script: |
         cd $(Build.SourcesDirectory)/azure-1
-        terraform plan -out=tfplan
+        terraform plan
         if [ $? -ne 0 ]; then
           echo "Error: Terraform plan failed. Please check the plan output for details."
           exit 1
@@ -70,7 +70,7 @@ jobs:
     - script: |
         cd $(Build.SourcesDirectory)/azure-1
         terraform init
-        terraform apply -auto-approve tfplan
+        terraform apply -auto-approve
         if [ $? -ne 0 ]; then
           echo "Error: Terraform apply failed. Please check the apply output for details."
           exit 1
