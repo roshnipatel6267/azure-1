@@ -1,0 +1,28 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - apache2  # On Ubuntu, the package name is apache2
+
+write_files:
+  - owner: root:root 
+    path: /var/www/html/index.html
+    content: |
+      <h1>Welcome to EIC- APP-1</h1>
+  - owner: root:root 
+    path: /var/www/html/app1/index.html
+    content: |
+      <!DOCTYPE html>
+      <html>
+        <body style="background-color:rgb(250, 210, 210);">
+          <h1>Welcome to EIC - APP-1</h1>
+          <p>Terraform Demo</p>
+          <p>Application Version: V1</p>
+        </body>
+      </html>
+
+runcmd:
+  - sudo systemctl start apache2
+  - sudo systemctl enable apache2
+  - sudo systemctl stop firewalld  # Make sure to handle firewall settings appropriately
+  - sudo mkdir /var/www/html/app1 
+  - [sudo, curl, -H, "Metadata:true", --noproxy, "*", "http://ip/metadata/instance?api-version=2020-09-01", -o, /var/www/html/app1/metadata.html]

@@ -62,11 +62,6 @@ variable "vm_username" {
   description = "Username for the Virtual Machine"
 }
 
-variable "vm_password" {
-  type        = string
-  description = "Password for the Virtual Machine"
-}
-
 variable "storage_account_name" {
   type        = string
   description = "Name of the Storage Account"
