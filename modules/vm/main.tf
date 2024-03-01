@@ -20,9 +20,9 @@ resource "azurerm_public_ip" "public_ip" {
   resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
 }
-resource "tls_private_key" "secureadmin_ssh" {
+resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
-  rsa_bits  = 4096
+  rsa_bits  = 2048
 }
 resource "azurerm_linux_virtual_machine" "vm" {
   name                            = var.vm_name
@@ -33,9 +33,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
   disable_password_authentication = true
   network_interface_ids           = [azurerm_network_interface.nic.id]
 
-   admin_ssh_key {
-    username   = "azureuser"
-    public_key = tls_private_key.secureadmin_ssh.public_key_openssh
+ os_profile_linux_config {
+    disable_password_authentication = true
+
+    ssh_keys {
+      path     = "/home/roshnipatel/.ssh/id_rsa.pub"
+      key_data = tls_private_key.ssh_key.public_key_openssh
+    }
   }
   os_disk {
     caching              = "ReadWrite"
